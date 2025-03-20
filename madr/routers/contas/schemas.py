@@ -1,15 +1,24 @@
 from ninja import Schema
 from ninja.orm import ModelSchema
+from pydantic import EmailStr
+
 from .models import User
 
+class Message(Schema):
+    message: str
+
 class UserSchema(ModelSchema):
+    email: EmailStr
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'password']
 
 class UserPublic(ModelSchema):
+    email: EmailStr
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'id']
+        fields = ['username', 'id']
 
 

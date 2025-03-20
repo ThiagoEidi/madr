@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ninja',
-    'madr.core',
     'madr.routers.contas',
     'madr.routers.livros',
     'madr.routers.romancistas',
