@@ -4,6 +4,8 @@ import uuid
 
 from madr.routers.contas.factories import UserFactory
 import pytest
+from django.contrib.auth.hashers import make_password
+from django.test import TransactionTestCase
 import json
 from http import HTTPStatus
 
@@ -31,6 +33,7 @@ def test_create_test_error_conflict(client):
     username = 'thiago'
     other_user = UserFactory(username=username)
 
+
     response = client.post(
         "/api/v1/contas/",
         data=json.dumps({
@@ -47,17 +50,21 @@ def test_create_test_error_conflict(client):
 
 @pytest.mark.django_db
 def test_user_update_not_authorize(client):
-    username1 = f'user1_{uuid.uuid4()}'
-    password = '123'
-    user = UserFactory(username=username1, password=password)
+    password='123'
+    user = UserFactory(password=make_password(password))
+    user.save()
+    username = 'qualquerloucura'
+    other_user = UserFactory(username=username, password=password)
+    other_user.save()
 
-    username2 = f'user2_{uuid.uuid4()}'
-    other_user = UserFactory(username=username2)
+    print(user.password)
 
     response = client.post(
         '/api/v1/contas/token',
-        data={'username': user.username, 'password': '123'},
+        data=json.dumps({'username': user.username, 'password': password}),
+        content_type="application/json"
     )
+    print(f'Resposta {response.json()}')
     token = response.json()['access_token']
 
     response = client.put(

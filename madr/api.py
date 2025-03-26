@@ -9,4 +9,3 @@ api = NinjaAPI(csrf=True)
 api.add_router('/contas', contas_router)
 api.add_router('/livros', livros_router)
 api.add_router('/romancistas', romancistas_router)
-

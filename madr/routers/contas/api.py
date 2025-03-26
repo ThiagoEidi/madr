@@ -9,9 +9,11 @@ from ninja import Schema
 from ninja.security import HttpBearer
 from jwt import decode, encode
 from datetime import datetime, timedelta
+from django.conf import settings
 
-SECRET_KEY = "secret_jwt_key"
-ALGORITHM = "HS256"
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):
@@ -36,7 +38,9 @@ class TokenSchema(Schema):
 
 @router.post("/token", response={HTTPStatus.OK: TokenSchema, HTTPStatus.UNAUTHORIZED: Message})
 def login(request, data: LoginSchema):
+
     user = User.objects.filter(username=data.username).first()
+
     if user and check_password(data.password, user.password):
         access_token = encode(
             {"sub": user.username, "id": user.id, "exp": datetime.utcnow() + timedelta(minutes=60)},

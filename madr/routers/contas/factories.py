@@ -6,6 +6,6 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = Sequence(lambda n: f'test{n}')
+    username = Sequence(lambda n: f'tsdsessst{n}')
     email = LazyAttribute(lambda obj: f'{obj.username}@test.com')
     password = LazyAttribute(lambda obj: f'{obj.username}@example.com')
