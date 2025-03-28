@@ -5,11 +5,11 @@ from .models import User
 from .schemas import UserSchema, UserPublic, Message
 from django.contrib.auth.hashers import make_password, check_password
 import datetime
+from django.conf import settings
 from ninja import Schema
 from ninja.security import HttpBearer
 from jwt import decode, encode
 from datetime import datetime, timedelta
-from django.conf import settings
 
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM

@@ -1,15 +1,14 @@
 from madr.routers.contas.factories import UserFactory
 import pytest
 
-
-@pytest.mark.django_db
+@pytest.mark.django_db(serialized_rollback=True)
 def test_str_method():
     username = 'xpto'
     user = UserFactory(username=username)
 
     assert str(user) == username
 
-@pytest.mark.django_db
+@pytest.mark.django_db(serialized_rollback=True)
 @pytest.mark.parametrize(
     ('username', 'username_sanitizado'),
     [
@@ -26,7 +25,7 @@ def test_sanitizar_username(username: str, username_sanitizado: str):
     user.sanitizar_username()
     assert user.username == username_sanitizado
 
-@pytest.mark.django_db
+@pytest.mark.django_db(serialized_rollback=True)
 def test_save_method():
     username = 'Manuel        Bandeira'
     user = UserFactory.build(username=username)

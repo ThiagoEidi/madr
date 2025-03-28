@@ -11,9 +11,32 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
 
-from django.conf.global_settings import SECRET_KEY
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file='.env', env_file_encoding='utf-8', extra='ignore'
+    )
+    SECRET_KEY: str
+    ALGORITHM: str
+    DEBUG: str
+    DJANGO_ALLOWED_HOSTS: str
+    DJANGO_LOGLEVEL: str  
+    DATABASE_ENGINE: str
+    DATABASE_NAME: str
+    DATABASE_USERNAME: str
+    DATABASE_PASSWORD: str
+    DATABASE_HOST: str
+    DATABASE_PORT: str
+
+
+settings = Settings()
+
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+DEBUG = settings.DEBUG
+ALLOWED_HOSTS = [settings.DJANGO_ALLOWED_HOSTS]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,14 +46,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
-ALGORITHM= config('ALGORITHM')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -88,11 +105,15 @@ WSGI_APPLICATION = 'madr.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+     'default': {
+         'ENGINE': settings.DATABASE_ENGINE,
+         'NAME': settings.DATABASE_NAME,
+         'USER': settings.DATABASE_USERNAME,
+         'PASSWORD': settings.DATABASE_PASSWORD,
+         'HOST': settings.DATABASE_HOST,
+         'PORT': settings.DATABASE_PORT,
+     }
+ }
 
 
 # Password validation
