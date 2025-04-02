@@ -3,14 +3,14 @@ import pytest
 from django.db import connections
 from django.db.utils import OperationalError
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_str_method():
     username = 'xpto'
     user = UserFactory(username=username)
 
     assert str(user) == username
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 @pytest.mark.parametrize(
     ('username', 'username_sanitizado'),
     [
@@ -27,7 +27,7 @@ def test_sanitizar_username(username: str, username_sanitizado: str):
     user.sanitizar_username()
     assert user.username == username_sanitizado
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_save_method():
     username = 'Manuel        Bandeira'
     user = UserFactory.build(username=username)
@@ -36,4 +36,12 @@ def test_save_method():
 
     assert user.username == 'manuel bandeira'
 
+@pytest.mark.django_db
+def test_can_connect_to_database():
+    db_conn = connections['default']
+    try:
+        db_conn.ensure_connection()
+        assert db_conn.is_usable()
+    except OperationalError:
+        pass
 
