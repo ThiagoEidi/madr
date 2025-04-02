@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 import json
 from http import HTTPStatus
 
-@pytest.mark.django_db(serialized_rollback=True)
+@pytest.mark.django_db()
 def test_create_user(client):
     response = client.post(
         "/api/v1/contas/",
@@ -23,7 +23,7 @@ def test_create_user(client):
         'id': 1,
     }
 
-@pytest.mark.django_db(serialized_rollback=True)
+@pytest.mark.django_db()
 def test_create_test_error_conflict(client):
     username = 'thiago'
     other_user = UserFactory(username=username)
@@ -43,7 +43,7 @@ def test_create_test_error_conflict(client):
     assert response.json().get('message') == 'Email ou Username já consta no banco'
 
 
-@pytest.mark.django_db(serialized_rollback=True)
+@pytest.mark.django_db()
 def test_user_update_not_authorize(client):
     password='123'
     user = UserFactory(password=make_password(password))

@@ -12,31 +12,31 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
-# from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# class Setting(BaseSettings):
-#     model_config = SettingsConfigDict(
-#         env_file='.env', env_file_encoding='utf-8', extra='ignore'
-#     )
-#     SECRET_KEY: str
-#     ALGORITHM: str
-#     DEBUG: str
-#     DJANGO_ALLOWED_HOSTS: str
-#     DJANGO_LOGLEVEL: str  
-#     DATABASE_ENGINE: str
-#     DATABASE_NAME: str
-#     DATABASE_USERNAME: str
-#     DATABASE_PASSWORD: str
-#     DATABASE_HOST: str
-#     DATABASE_PORT: str
+class Setting(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file='.env', env_file_encoding='utf-8', extra='ignore'
+    )
+    SECRET_KEY: str
+    ALGORITHM: str
+    DEBUG: str
+    DJANGO_ALLOWED_HOSTS: str
+    DJANGO_LOGLEVEL: str  
+    DATABASE_ENGINE: str
+    DATABASE_NAME: str
+    DATABASE_USERNAME: str
+    DATABASE_PASSWORD: str
+    DATABASE_HOST: str
+    DATABASE_PORT: str
 
 
-# setting = Setting()
+setting = Setting()
 
-# SECRET_KEY = setting.SECRET_KEY
-# ALGORITHM = setting.ALGORITHM
-# DEBUG = setting.DEBUG
-# ALLOWED_HOSTS = [setting.DJANGO_ALLOWED_HOSTS]
+SECRET_KEY = setting.SECRET_KEY
+ALGORITHM = setting.ALGORITHM
+DEBUG = setting.DEBUG
+ALLOWED_HOSTS = [setting.DJANGO_ALLOWED_HOSTS]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
