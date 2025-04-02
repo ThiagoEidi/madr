@@ -2,7 +2,6 @@ from madr.routers.contas.factories import UserFactory
 import pytest
 from django.contrib.auth.hashers import make_password
 import json
-import pytest
 from http import HTTPStatus
 
 @pytest.mark.django_db(serialized_rollback=True)

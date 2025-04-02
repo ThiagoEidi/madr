@@ -14,15 +14,16 @@ dependencies = [
     "pydantic[email]>=2.10.6",
     "pyjwt>=2.10.1",
     "python-decouple>=3.8",
+    "testcontainers[postgresql]>=4.9.2",
 ]
 
 [dependency-groups]
 dev = [
+    "ipdb>=0.13.13",
     "pytest-cov>=6.0.0",
     "pytest-django>=4.10.0",
     "pytest-sugar>=1.0.0",
     "taskipy>=1.14.1",
-    "testcontainers>=4.9.2",
 ]
 
 [tool.taskipy.tasks]

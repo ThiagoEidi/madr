@@ -12,31 +12,31 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
-from pydantic_settings import BaseSettings, SettingsConfigDict
+# from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file='.env', env_file_encoding='utf-8', extra='ignore'
-    )
-    SECRET_KEY: str
-    ALGORITHM: str
-    DEBUG: str
-    DJANGO_ALLOWED_HOSTS: str
-    DJANGO_LOGLEVEL: str  
-    DATABASE_ENGINE: str
-    DATABASE_NAME: str
-    DATABASE_USERNAME: str
-    DATABASE_PASSWORD: str
-    DATABASE_HOST: str
-    DATABASE_PORT: str
+# class Setting(BaseSettings):
+#     model_config = SettingsConfigDict(
+#         env_file='.env', env_file_encoding='utf-8', extra='ignore'
+#     )
+#     SECRET_KEY: str
+#     ALGORITHM: str
+#     DEBUG: str
+#     DJANGO_ALLOWED_HOSTS: str
+#     DJANGO_LOGLEVEL: str  
+#     DATABASE_ENGINE: str
+#     DATABASE_NAME: str
+#     DATABASE_USERNAME: str
+#     DATABASE_PASSWORD: str
+#     DATABASE_HOST: str
+#     DATABASE_PORT: str
 
 
-settings = Settings()
+# setting = Setting()
 
-SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = settings.ALGORITHM
-DEBUG = settings.DEBUG
-ALLOWED_HOSTS = [settings.DJANGO_ALLOWED_HOSTS]
+# SECRET_KEY = setting.SECRET_KEY
+# ALGORITHM = setting.ALGORITHM
+# DEBUG = setting.DEBUG
+# ALLOWED_HOSTS = [setting.DJANGO_ALLOWED_HOSTS]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -106,14 +106,15 @@ WSGI_APPLICATION = 'madr.wsgi.application'
 
 DATABASES = {
      'default': {
-         'ENGINE': settings.DATABASE_ENGINE,
-         'NAME': settings.DATABASE_NAME,
-         'USER': settings.DATABASE_USERNAME,
-         'PASSWORD': settings.DATABASE_PASSWORD,
-         'HOST': settings.DATABASE_HOST,
-         'PORT': settings.DATABASE_PORT,
+         'ENGINE': "django.db.backends.postgresql",
+         'NAME': "madr-db",
+         'USER': "thiago",
+         'PASSWORD': "12345",
+         'HOST': "db",
+         'PORT': "5432",
      }
  }
+
 
 
 # Password validation

@@ -1,14 +1,16 @@
 from madr.routers.contas.factories import UserFactory
 import pytest
+from django.db import connections
+from django.db.utils import OperationalError
 
-@pytest.mark.django_db(serialized_rollback=True)
+@pytest.mark.django_db
 def test_str_method():
     username = 'xpto'
     user = UserFactory(username=username)
 
     assert str(user) == username
 
-@pytest.mark.django_db(serialized_rollback=True)
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     ('username', 'username_sanitizado'),
     [
@@ -25,7 +27,7 @@ def test_sanitizar_username(username: str, username_sanitizado: str):
     user.sanitizar_username()
     assert user.username == username_sanitizado
 
-@pytest.mark.django_db(serialized_rollback=True)
+@pytest.mark.django_db
 def test_save_method():
     username = 'Manuel        Bandeira'
     user = UserFactory.build(username=username)
@@ -33,3 +35,5 @@ def test_save_method():
     user.save()
 
     assert user.username == 'manuel bandeira'
+
+
