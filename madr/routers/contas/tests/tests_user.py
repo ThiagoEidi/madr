@@ -22,7 +22,7 @@ def test_create_user(client):
         'id': 1,
     }
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_create_test_error_conflict(client):
     username = 'thiago'
     other_user = UserFactory(username=username)
@@ -30,11 +30,11 @@ def test_create_test_error_conflict(client):
 
     response = client.post(
         "/api/v1/contas/",
-        data=json.dumps({
+        data={
             'username': 'thiago',
             'email': 'qualquercoisa@gmail.com',
             'password': '123'
-        }),
+        },
         content_type="application/json"
     )
 

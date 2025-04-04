@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 import json
 from http import HTTPStatus
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_user_update_not_authorize(client):
     password='123'
     user = UserFactory(password=make_password(password))
