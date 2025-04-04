@@ -3,53 +3,13 @@ from ninja import Router
 from django.db.models import Q
 from .models import User
 from .schemas import UserSchema, UserPublic, Message
-from django.contrib.auth.hashers import make_password, check_password
-import datetime
-from django.conf import settings
-from ninja import Schema
-from ninja.security import HttpBearer
-from jwt import decode, encode
-from datetime import datetime, timedelta
+from django.contrib.auth.hashers import make_password
+from madr.routers.auths.api import auth_bearer
 
-SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = settings.ALGORITHM
-
-
-class AuthBearer(HttpBearer):
-    def authenticate(self, request, token):
-        payload = decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        if payload:
-            return payload
-
-
-auth_bearer = AuthBearer()
 
 
 router = Router(tags=['contas'])
 
-class LoginSchema(Schema):
-    username: str
-    password: str
-
-class TokenSchema(Schema):
-    access_token: str
-    token_type: str
-
-
-@router.post("/token", response={HTTPStatus.OK: TokenSchema, HTTPStatus.UNAUTHORIZED: Message})
-def login(request, data: LoginSchema):
-
-    user = User.objects.filter(username=data.username).first()
-
-    if user and check_password(data.password, user.password):
-        access_token = encode(
-            {"sub": user.username, "id": user.id, "exp": datetime.utcnow() + timedelta(minutes=60)},
-            SECRET_KEY,
-            algorithm=ALGORITHM,
-        )
-        return HTTPStatus.OK, {"access_token": access_token, "token_type": "bearer"}
-
-    return HTTPStatus.UNAUTHORIZED, {"message": "Credenciais inválidas"}
 
 @router.post("/", response={HTTPStatus.CREATED: UserPublic, HTTPStatus.CONFLICT: Message})
 def create_user(request, user: UserSchema):
