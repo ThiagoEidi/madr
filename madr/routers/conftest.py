@@ -1,9 +1,6 @@
 import pytest
 from testcontainers.postgres import PostgresContainer
 from django.db import connections
-from django.db.utils import OperationalError
-import time
-
 
 @pytest.fixture(scope='session')
 def postgres_container():
@@ -27,13 +24,4 @@ def django_db_modify_db_settings(postgres_container):
     connections.settings = connections.configure_settings(settings.DATABASES)
     connections["default"] = connections.create_connection("default")
     
-@pytest.mark.django_db
-def test_can_connect_to_database():
-    db_conn = connections['default']
-    __import__("ipdb").set_trace()
-    try:
-        db_conn.ensure_connection()
-        assert db_conn.is_usable()
-    except OperationalError:
-        pass
 

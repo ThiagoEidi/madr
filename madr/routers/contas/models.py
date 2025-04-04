@@ -14,7 +14,7 @@ class User(models.Model):
         self.username = self.username.lower()
         self.username = " ".join(self.username.split())
         self.username.strip()
-        self.username = re.sub(r'[^a-zA-ZÀ-ÿ\s]', '', self.username)
+        self.username = re.sub(r'[^a-zA-ZÀ-ÿ0-9\s]', '', self.username)
 
 
     def save(self, *args, **kwargs):

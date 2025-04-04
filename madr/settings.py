@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ninja',
     'madr.routers.contas',
+    'madr.routers.auths',
     'madr.routers.livros',
     'madr.routers.romancistas',
 

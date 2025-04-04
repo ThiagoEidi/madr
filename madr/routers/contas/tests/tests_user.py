@@ -1,10 +1,9 @@
 from madr.routers.contas.factories import UserFactory
 import pytest
-from django.contrib.auth.hashers import make_password
 import json
 from http import HTTPStatus
 
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db
 def test_create_user(client):
     response = client.post(
         "/api/v1/contas/",
@@ -23,7 +22,7 @@ def test_create_user(client):
         'id': 1,
     }
 
-@pytest.mark.django_db(transaction=True)
+@pytest.mark.django_db
 def test_create_test_error_conflict(client):
     username = 'thiago'
     other_user = UserFactory(username=username)
