@@ -14,6 +14,11 @@ class UserSchema(ModelSchema):
         model = User
         fields = ['username', 'password']
 
+# class UserSchema(Schema):
+#     email: str
+#     username: str
+#     password: str
+
 class UserPublic(ModelSchema):
     email: EmailStr
 

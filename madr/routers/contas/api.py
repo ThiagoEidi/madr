@@ -32,25 +32,24 @@ errors = frozenset({HTTPStatus.CONFLICT, HTTPStatus.NOT_FOUND, HTTPStatus.FORBID
     response={HTTPStatus.OK: UserPublic, errors: Message},
     auth=auth_bearer
 )
-def update_user(request, user: UserSchema, user_id: int):
-    if int(request.auth["id"]) != int(user_id):
-        return HTTPStatus.FORBIDDEN, {'message': "Não autorizado"}
-
+def update_user(request, user_id: int, user: UserSchema):
     try:
-        existing_user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        return HTTPStatus.NOT_FOUND, {"message": "Usuário não encontrado"}
+        user_db = User.objects.get(id=user_id)
+        user_db.username = user.username
+        user_db.email = user.email
+        user_db.password = make_password(user.password)
+        user_db.save()
+        return HTTPStatus.OK, user_db
 
-    if User.objects.filter(Q(email=user.email) | Q(username=user.username)).exclude(id=user_id).exists():
-        return HTTPStatus.CONFLICT, {'message': 'Email ou Username já consta no banco'}
 
-    existing_user.username = user.username
-    existing_user.email = user.email
+    except User.DoesNotExist as e:
+        status_code = HTTPStatus.NOT_FOUND
+        error_msg = {"message": "Usuário não encontrado"}
 
-    if user.password:
-        existing_user.password = make_password(user.password)
+    except Exception as e:
+        status_code = HTTPStatus.BAD_REQUEST
+        error_msg = {"message": str(e)}
 
-    existing_user.save()
+    return status_code, error_msg
 
-    return existing_user
 

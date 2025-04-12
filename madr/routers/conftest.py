@@ -1,6 +1,9 @@
 import pytest
 from testcontainers.postgres import PostgresContainer
 from django.db import connections
+from madr.routers.contas.factories import UserFactory
+from django.contrib.auth.hashers import make_password
+
 
 @pytest.fixture(scope='session')
 def postgres_container():
@@ -23,5 +26,42 @@ def django_db_modify_db_settings(postgres_container):
     
     connections.settings = connections.configure_settings(settings.DATABASES)
     connections["default"] = connections.create_connection("default")
-    
 
+@pytest.fixture(scope='function')
+@pytest.mark.django_db()
+def user():
+    password='testtest'
+    user = UserFactory(password=make_password(password))
+
+    user.save()
+
+    user.clean_password = password
+
+    return user
+
+@pytest.fixture(scope='function')
+@pytest.mark.django_db()
+def other_user():
+    password='testtesttest'
+    user = UserFactory(password=make_password(password))
+
+    user.save()
+
+    user.clean_password = password
+
+    return user
+
+
+@pytest.fixture(scope='function')
+def token(user, client):
+    response = client.post(
+        '/api/v1/auth/token',
+        data={
+            'username': user.username,
+            'password': user.clean_password
+        },
+        content_type="application/json"
+    )
+
+    return response.json()['access_token']
+    

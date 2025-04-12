@@ -15,15 +15,19 @@ auth_bearer = AuthBearer()
 
 @router.post("/token", response={HTTPStatus.OK: TokenSchema, HTTPStatus.UNAUTHORIZED: Message})
 def login(request, data: LoginSchema):
-
-    user = User.objects.filter(username=data.username).first()
-
-    if user and check_password(data.password, user.password):
+    try: 
+        user = User.objects.get(username=data.username)
+        if not check_password(data.password, user.password):
+            raise
         access_token = encode(
-            {"sub": user.username, "id": user.id, "exp": datetime.utcnow() + timedelta(minutes=60)},
+            {"sub": user.username, "id": user.id, "exp": datetime.now() + timedelta(minutes=60)},
             settings.SECRET_KEY,
             algorithm=settings.ALGORITHM,
         )
         return HTTPStatus.OK, {"access_token": access_token, "token_type": "bearer"}
+    
+    except Exception:
+        status_code = HTTPStatus.UNAUTHORIZED
+        msg_error =  {"message": "Credenciais inválidas"}
 
-    return HTTPStatus.UNAUTHORIZED, {"message": "Credenciais inválidas"}
+    return status_code, msg_error

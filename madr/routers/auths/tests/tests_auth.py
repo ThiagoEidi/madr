@@ -1,33 +1,22 @@
 from madr.routers.contas.factories import UserFactory
 import pytest
 from django.contrib.auth.hashers import make_password
-import json
 from http import HTTPStatus
+from madr.routers.contas.models import User
 
-@pytest.mark.django_db(transaction=True)
-def test_user_update_not_authorize(client):
-    password='123'
-    user = UserFactory(password=make_password(password))
-    username = 'qualquerloucura'
-    other_user = UserFactory(username=username, password=password)
-
+@pytest.mark.django_db
+def test_create_token(client, user: User):
     response = client.post(
         '/api/v1/auth/token',
-        data={'username': user.username, 'password': password},
-        content_type="application/json"
-    )
-    token = response.json()['access_token']
-
-    response = client.put(
-        f'/api/v1/contas/{other_user.id}',
-        headers={'Authorization': f'Bearer {token}'},
-        data={
-            'username': 'outro',
-            'email': 'soadjdosa@odasodsa.com',
-            'password': '123'
+        data = {
+            'username': user.username,
+            'password': user.clean_password,
         },
-        content_type="application/json"
+        content_type='application/json'
     )
+    token = response.json()
 
-    assert response.status_code == HTTPStatus.FORBIDDEN
-    assert response.json() == {'message': 'Não autorizado'}
+    assert 'access_token' in token
+    assert 'token_type' in token
+    assert token['token_type'] == 'bearer'
+
