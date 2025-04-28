@@ -33,6 +33,7 @@ errors = frozenset({HTTPStatus.CONFLICT, HTTPStatus.NOT_FOUND, HTTPStatus.FORBID
     auth=auth_bearer
 )
 def update_user(request, user_id: int, user: UserSchema):
+    __import__('ipdb').set_trace()
     try:
         user_db = User.objects.get(id=user_id)
         user_db.username = user.username

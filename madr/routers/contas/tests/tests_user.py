@@ -65,34 +65,35 @@ def test_update_user(user, client, token):
         'id': user.id,
     }
 
-# @pytest.mark.django_db
-# def test_user_update_not_authorize(client, token, user):
-#     response = client.put(
-#         f'/api/v1/contas/{user.id}',
-#         headers={'Authorization': f'Bearer {token}'},
-#         data={
-#             'username': 'outro',
-#             'email': 'soadjdosa@odasodsa.com',
-#             'password': '123'
-#         },
-#         content_type="application/json"
-#     )
+@pytest.mark.django_db
+def test_user_update_not_authorize(client, token, user):
+    response = client.put(
+        f'/api/v1/contas/{user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        data={
+            'username': 'outro',
+            'email': 'soadjdosa@odasodsa.com',
+            'password': '123'
+        },
+        content_type="application/json"
+    )
+    __import__('ipdb').set_trace()
 
-#     assert response.status_code == HTTPStatus.FORBIDDEN
-#     assert response.json() == {'message': 'Não autorizado'}
+    assert response.status_code == HTTPStatus.FORBIDDEN
+    assert response.json() == {'message': 'Não autorizado'}
 
-# @pytest.mark.django_db
-# def test_user_not_found(client, user, token):
-#     response = client.put(
-#         f'/api/v1/contas/{-user.id}',
-#         headers={'Authorization': f'Bearer {token}'},
-#         data={
-#             'username': 'outro',
-#             'email': 'soadjdosa@odasodsa.com',
-#             'password': '123',
-#         },
-#         content_type="application/json"
-#     )
+@pytest.mark.django_db
+def test_user_not_found(client, user, token):
+    response = client.put(
+        f'/api/v1/contas/{-user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        data={
+            'username': 'outro',
+            'email': 'soadjdosa@odasodsa.com',
+            'password': '123',
+        },
+        content_type="application/json"
+    )
 
-#     assert response.status_code == HTTPStatus.NOT_FOUND
-#     assert response.json() == {'message': 'Usuário não encontrado'}
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'message': 'Usuário não encontrado'}
